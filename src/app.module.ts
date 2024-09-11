@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
-import { LendingModule } from './lending/lending.module';
+import { LandingModule } from './landing/landing.module';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { LendingModule } from './lending/lending.module';
     AuthModule,
     UsersModule,
     ProjectsModule,
-    LendingModule
+    LandingModule
   ],
   controllers: [AppController],
   providers: [],
