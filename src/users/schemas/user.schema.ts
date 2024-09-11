@@ -4,9 +4,9 @@ import * as mongoose from 'mongoose';
 export type UserDocument = mongoose.HydratedDocument<User>;
 
 @Schema()
-export class User {
+export class User extends mongoose.Document {
     @Prop({ type: Date, required: true, default: Date.now() })
-    date: Date;
+    created_date: Date;
 
     @Prop({ required: true })
     full_name: string;
