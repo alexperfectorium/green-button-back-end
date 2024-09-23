@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { ProjectsModule } from './projects/projects.module';
 import { LandingModule } from './landing/landing.module';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { LandingModule } from './landing/landing.module';
     AuthModule,
     UsersModule,
     ProjectsModule,
-    LandingModule
+    LandingModule,
+    AiModule
   ],
   controllers: [AppController],
   providers: [],

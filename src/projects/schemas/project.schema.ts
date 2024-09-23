@@ -26,8 +26,8 @@ export class Project extends mongoose.Document {
     @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Channel' }] })
     channels: mongoose.Schema.Types.ObjectId[];
 
-    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Lending' }] })
-    lendings: mongoose.Schema.Types.ObjectId[];
+    @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Landing' }] })
+    landings: mongoose.Schema.Types.ObjectId[];
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);
