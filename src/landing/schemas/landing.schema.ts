@@ -1,28 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { ColorsType } from '../entities/appearence.entity';
+import { SectionType } from '../entities/sections.entity';
 
 export type LandingDocument = mongoose.HydratedDocument<Landing>;
 
-class Section {
-    id: string;
-    component: string;
-    settings: {
-        variation: number;
-        inMenu: boolean;
-        isAction: boolean;
-        menuTitle: string;
-    };
-    block: Object;
-}
-
 class Appearence {
-    colors: {
-        "light": "",
-        "dark": "",
-        "accent": "",
-        "text": "",
-        "miscellaneous": ""
-    }
+    colors: ColorsType
 }
 
 class FormSubmission {
@@ -48,8 +32,8 @@ export class Landing extends mongoose.Document {
     @Prop({ type: Appearence, required: true })
     appearence: Appearence;
   
-    @Prop({ type: Array<Section>, required: true })
-    sections: Section[];
+    @Prop({ type: Array<SectionType>, required: true })
+    sections: SectionType[];
 
     @Prop({ type: FormSubmission })
     form_submission: FormSubmission

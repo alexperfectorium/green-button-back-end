@@ -4,6 +4,9 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Landing, LandingDocument } from './schemas/landing.schema';
 import { AiService } from 'src/ai/ai.service';
 
+import { Sections } from './entities/sections.entity';
+import { COLOR_PALLETES } from './templates/colors.templates';
+
 @Injectable()
 export class LandingService {
     constructor(
@@ -63,7 +66,7 @@ export class LandingService {
             },
             {
                 name: "logo",
-                type: 'file',
+                type: "attachment",
                 accept: "image/png, image/jpeg, image/webp, image/svg",
                 messages: [
                     "Дякую! Чи маєте Ви логотип, який слід використовувати на сторінці? Будь ласка, завантажте його тут або надішліть посилання для завантаження.",
@@ -71,9 +74,8 @@ export class LandingService {
                 can_skip: true
             },
             {
-                name: "brandbook",
-                type: 'file',
-                accept: ".pdf, .doc, .docx",
+                name: "color",
+                type: "color-picker",
                 messages: [
                     "Дякую! Чи є у Вас брендбук, який містить стильові керівництва для вашого бренду?",
                 ],
@@ -84,26 +86,70 @@ export class LandingService {
 
     async create(userId, body) {
         try {
-            // console.log(userId, body);
-
-            if (!userId) {
-                throw new HttpException('user_id_empty', HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-
-            if (!body?.title?.length) {
+            if (!body?.company_name?.length) {
                 throw new HttpException('error', HttpStatus.BAD_REQUEST);
             }
 
-            const landing = await new this.landingModel({
-                domain: body.title.toLowerCase(),
-                title: body.title,
-                seo_title: `Home | ${body.title}`,
-                appearence: {},
-                sections: []
-            });
+            // Convert company name to domain format
+            let domain = body.company_name
+                .trim() // remove leading and trailing spaces
+                .toLowerCase()
+                .replace(/[^a-zA-Z0-9\s-]/g, '') // remove all non-alphanumeric characters except spaces and hyphens
+                .split(' ')
+                .filter(s => s.length !== 0)
+                .join('-');
 
-            await landing.save();
-            return landing;
+            let isExist = await this.landingModel.findOne({ domain: domain });
+            if (isExist) {
+                throw new HttpException('domain_already_exist', HttpStatus.BAD_REQUEST);
+            }
+
+            let aiRes = await this.aiService.text({
+                messages: [
+                    { 
+                        role:"user", 
+                        content: `"Generate content for the landing page. The type of this landing page is ${body.type}, and he is about: ${body.description}"`}
+                ],
+                functions: [{
+                    name: "Hero",                    
+                    description: "Hero section content in json format",
+                    parameters: {
+                        "type": "object",
+                        "properties": {
+                            "title": {
+                                "type": "string",
+                                "description": "Title of this section"
+                            },
+                            "subtitle": {
+                                "type": "string",
+                                "description": "Subtitle of this section"
+                            },
+                            "benefits": {
+                                "type": "array",
+                                "description": "Benefits",
+                                "items": {
+                                    "type": "string",
+                                    "description": "Benefits item"
+                                }   
+                            } 
+                        }
+                    }
+                }]
+            });
+            
+            let res = aiRes?.choices[0]?.message?.function_call?.arguments; 
+            return res ? JSON.parse(res) : 'error';
+            // return Sections.map(item => item.component);
+            // const landing = await new this.landingModel({
+            //     domain,
+            //     title: body.company_name,
+            //     seo_title: `Home | ${body.company_name}`,
+            //     appearence: {},
+            //     sections: []
+            // });
+
+            // await landing.save();
+            // return landing;
         }
         catch(e) {
             throw new HttpException(e.message, e.status);

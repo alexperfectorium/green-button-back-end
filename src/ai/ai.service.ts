@@ -1,6 +1,6 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import OpenAI from "openai";
-import { IChatRequest, IChatResponse } from './ai.interfaces';
+import { IChatResponse } from './ai.interfaces';
 
 @Injectable()
 export class AiService {
@@ -12,11 +12,12 @@ export class AiService {
         });
     }
 
-    async getMessagesData(request: IChatRequest): Promise<OpenAI.ChatCompletion> {
+    async text(request): Promise<OpenAI.ChatCompletion> {
         try {
             return this.openai.chat.completions.create({
                 model: process.env.OPENAI_API_MODEL,
                 messages: request.messages,
+                functions: request?.functions ?? undefined,
             });
         } catch(e) {
             throw new HttpException(e.message, e.status);

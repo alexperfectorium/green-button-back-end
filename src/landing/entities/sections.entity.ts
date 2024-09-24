@@ -2,10 +2,7 @@ import { Button } from "./components.entity";
 
 let Section = {
     component: "Section",
-    id: {
-        type: "random-string",
-        required: true
-    },
+    id: "section-id",
     settings: {
         variation: {
             type: "select",
@@ -20,7 +17,19 @@ let Section = {
     block: {}
 }
 
-export let HeroSection = Object.assign(Section, {
+export interface SectionType {
+    id: string;
+    component: string;
+    settings: {
+        variation: number;
+        inMenu: boolean;
+        isAction: boolean;
+    };
+    block: Object;
+}
+
+export let HeroSection = {
+    ...Section,
     component: "Hero",
     block: {
         title: {
@@ -42,9 +51,10 @@ export let HeroSection = Object.assign(Section, {
             component: Button
         }
     } 
-});
+};
 
-export let GallerySection = Object.assign(Section, {
+export let GallerySection = {
+    ...Section,
     component: "Gallery",
     block: {
         title: { type: "string" },
@@ -62,9 +72,10 @@ export let GallerySection = Object.assign(Section, {
             }
         }
     } 
-});
+};
 
-export let ResourcesSection = Object.assign(Section, {
+export let ResourcesSection = {
+    ...Section,
     component: "Resources",
     block: {
         title: { type: "string" },
@@ -77,9 +88,10 @@ export let ResourcesSection = Object.assign(Section, {
             }
         }
     } 
-});
+};
 
-export let MediaContentSection = Object.assign(Section, {
+export let MediaContentSection = {
+    ...Section,
     component: "MediaContent",
     block: {
         top_title: { type: "string" },
@@ -93,9 +105,10 @@ export let MediaContentSection = Object.assign(Section, {
             ]
         }
     } 
-});
+};
 
-export let FeaturesSection = Object.assign(Section, {
+export let FeaturesSection = {
+    ...Section,
     component: "Features",
     block: {
         title: { type: "string" },
@@ -119,9 +132,10 @@ export let FeaturesSection = Object.assign(Section, {
             ]
         }
     } 
-});
+};
 
-export let BenefitsSection = Object.assign(Section, {
+export let BenefitsSection = {
+    ...Section,
     component: "Benefits",
     block: {
         title: { type: "string" },
@@ -146,9 +160,10 @@ export let BenefitsSection = Object.assign(Section, {
             ]
         }
     } 
-});
+};
 
-export let HowItWorksSection = Object.assign(Section, {
+export let HowItWorksSection = {
+    ...Section,
     component: "HowItWorks",
     block: {
         title: { type: "string" },
@@ -168,26 +183,114 @@ export let HowItWorksSection = Object.assign(Section, {
             }
         }        
     } 
-});
+};
 
-export let TestimonialsSection = Object.assign(Section, {
+export let TestimonialsSection = {
+    ...Section,
     component: "Testimonials",
     block: {
         title: { type: "string" },
+        items: {
+            type: "repeater",
+            component: {
+                quote: { type: "string" },
+                author: {
+                    type: "group",
+                    component: {
+                        avatar: {
+                            type: "media",
+                            allowed_types: [
+                                "images"
+                            ]
+                        },
+                        name: { type: "string" },
+                        position: { type: "string" }
+                    }
+                }
+            }
+        }        
+    } 
+};
+
+export let FAQSection = {
+    ...Section,
+    component: "FAQ",
+    block: {
+        title: { type: "string" },
+        items: {
+            type: "repeater",
+            component: {
+                question: { type: "string" },
+                answer: { type: "string" }
+            }
+        }        
+    } 
+};
+
+export let CallToActionSection = {
+    ...Section,
+    component: "CallToAction",
+    block: {
+        title: { type: "string" },
         subtitle: { type: "string" },
-        button: Button,
         image: {
             type: "media",
             allowed_types: [
                 "images"
             ]
         },
-        steps: {
+        form: {
+            type: "group",
+            component: {
+                fields: {
+                    type: "repeater",
+                    component: {
+                        type: {
+                            type: "select",
+                            options: ["text", "textarea", "tel", "email", "select"],
+                            default: "text"
+                        },
+                        name: { type: "string" },
+                        required: { type: "boolean" },
+                        placeholder: { type: "string" },
+                        options: {
+                            type: "repeater",
+                            component: {
+                                slug: {type: "string"},
+                                title: {type: "string"}
+                            },
+                            condition: "type.eq.select"
+                        }
+                    }
+                },
+                success_message: { type: "string" },
+                button: { type: "string" }
+            }
+        },
+        contact_info: {
             type: "repeater",
             component: {
-                title: { type: "string" },
-                subtitle: { type: "string" }
+                type: {
+                    type: "select",
+                    options: ["location", "phone", "mail"],
+                    default: "mail"
+                },
+                text: { type: "string" },
+                url: { type: "string" }
             }
-        }        
+        }   
     } 
-});
+};
+
+export let Sections = [
+    HeroSection, 
+    GallerySection, 
+    ResourcesSection, 
+    MediaContentSection, 
+    FeaturesSection, 
+    BenefitsSection, 
+    HowItWorksSection,
+    TestimonialsSection,
+    FAQSection,
+    CallToActionSection
+];

@@ -17,10 +17,6 @@ class ProductDto {
 }
 
 export class CreateLandingDto {
-    @IsString()
-    @IsNotEmpty()
-    readonly title: string;
-
     @IsIn(["ecommerce", "promotion"])
     readonly type: string;    
     
@@ -48,7 +44,6 @@ export class CreateLandingDto {
     @IsMimeType()
     readonly logo: Express.Multer.File
      
-    // @IsOptional()
-    // @IsMimeType()
-    // readonly brandbook: Express.Multer.File
+    @IsOptional()
+    readonly color: string
 }

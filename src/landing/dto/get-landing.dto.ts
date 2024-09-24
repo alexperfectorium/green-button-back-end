@@ -5,7 +5,7 @@ export class GetLandingDto {
     readonly created_date: Date;
     readonly domain: string;
     readonly title: string;
-    readonly set_title: string;
+    readonly seo_title: string;
     readonly appearence: Object;
     readonly sections: Object;
 }
