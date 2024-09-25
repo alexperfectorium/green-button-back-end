@@ -4,15 +4,8 @@ let Section = {
     component: "Section",
     id: "section-id",
     settings: {
-        variation: {
-            type: "select",
-            options: [1, 2, 3],
-            default: 2
-        },
-        is_action: {
-            type: "boolean",
-            default: false
-        },
+        variation: [1, 2, 3],
+        is_action: false,
     },
     block: {}
 }
@@ -34,22 +27,25 @@ export let HeroSection = {
     block: {
         title: {
             type: "string",
+            description: "Title of hero section"
         },
         subtitle: {
             type: "string",
+            description: "Subtitle of hero section"
         },
-        image: {
-            type: "media",
-            required: false,
-            allowed_types: [
-                "images"
-            ]
-        },
-        buttons: {
-            type: "repeater",
-            max: 2,
-            component: Button
-        }
+        // image: {
+        //     type: "media",
+        //     required: false,
+        //     allowed_types: [
+        //         "images"
+        //     ]
+        // },
+        // buttons: {
+        //     type: "array",
+        //     description: "Array of buttons properties. Max 2 items",
+        //     items: Button,
+        //     maxLength: 2
+        // }
     } 
 };
 
@@ -57,20 +53,26 @@ export let GallerySection = {
     ...Section,
     component: "Gallery",
     block: {
-        title: { type: "string" },
-        subtitle: { type: "string" },
-        items: {
-            type: "repeater",
-            component: {
-                url: {
-                    type: "media",
-                    required: false,
-                    allowed_types: [
-                        "images"
-                    ]
-                }
-            }
-        }
+        title: { 
+            type: "string",
+            description: "Title of gallery section"
+        },
+        subtitle: { 
+            type: "string",
+            description: "Subtitle of gallery section"
+        },
+        // items: {
+        //     type: "array",
+        //     items: {
+        //         url: {
+        //             type: "media",
+        //             required: false,
+        //             allowed_types: [
+        //                 "images"
+        //             ]
+        //         }
+        //     }
+        // }
     } 
 };
 
@@ -78,13 +80,26 @@ export let ResourcesSection = {
     ...Section,
     component: "Resources",
     block: {
-        title: { type: "string" },
+        title: { 
+            type: "string",
+            description: "Title of resources section" 
+        },
         items: {
-            type: "repeater",
-            component: {
-                title: { type: "string" },
-                text: { type: "string" },
-                button: Button
+            type: "array",
+            description: "Array of some avaiable resources",
+            items: {
+                type: "object",
+                properties: {
+                    title: { 
+                        type: "string",
+                        description: "Title of resources item"
+                    },
+                    text: { 
+                        type: "string", 
+                        description: "Text of resources item"
+                    },
+                    // button: Button
+                }
             }
         }
     } 
@@ -113,8 +128,8 @@ export let FeaturesSection = {
     block: {
         title: { type: "string" },
         items: {
-            type: "repeater",
-            component: {
+            type: "array",
+            items: {
                 title: { type: "string" },
                 text: { type: "string" },
                 image: {
@@ -141,8 +156,8 @@ export let BenefitsSection = {
         title: { type: "string" },
         button: Button,
         items: {
-            type: "repeater",
-            component: {
+            type: "array",
+            items: {
                 title: { type: "string" },
                 subtitle: { type: "string" },
                 image: {
@@ -176,8 +191,8 @@ export let HowItWorksSection = {
             ]
         },
         steps: {
-            type: "repeater",
-            component: {
+            type: "array",
+            items: {
                 title: { type: "string" },
                 subtitle: { type: "string" }
             }
@@ -191,12 +206,12 @@ export let TestimonialsSection = {
     block: {
         title: { type: "string" },
         items: {
-            type: "repeater",
-            component: {
+            type: "array",
+            items: {
                 quote: { type: "string" },
                 author: {
-                    type: "group",
-                    component: {
+                    type: "object",
+                    properties: {
                         avatar: {
                             type: "media",
                             allowed_types: [
@@ -218,8 +233,8 @@ export let FAQSection = {
     block: {
         title: { type: "string" },
         items: {
-            type: "repeater",
-            component: {
+            type: "array",
+            items: {
                 question: { type: "string" },
                 answer: { type: "string" }
             }
@@ -229,6 +244,10 @@ export let FAQSection = {
 
 export let CallToActionSection = {
     ...Section,
+    settings: {
+        ...Section.settings,
+        is_action: true
+    },
     component: "CallToAction",
     block: {
         title: { type: "string" },
@@ -239,58 +258,58 @@ export let CallToActionSection = {
                 "images"
             ]
         },
-        form: {
-            type: "group",
-            component: {
-                fields: {
-                    type: "repeater",
-                    component: {
-                        type: {
-                            type: "select",
-                            options: ["text", "textarea", "tel", "email", "select"],
-                            default: "text"
+    }, 
+    form: {
+        type: "object",
+        properties: {
+            fields: {
+                type: "array",
+                items: {
+                    type: {
+                        type: "select",
+                        options: ["text", "textarea", "tel", "email", "select"],
+                        default: "text"
+                    },
+                    name: { type: "string" },
+                    required: { type: "boolean" },
+                    placeholder: { type: "string" },
+                    options: {
+                        type: "array",
+                        items: {
+                            slug: {type: "string"},
+                            title: {type: "string"}
                         },
-                        name: { type: "string" },
-                        required: { type: "boolean" },
-                        placeholder: { type: "string" },
-                        options: {
-                            type: "repeater",
-                            component: {
-                                slug: {type: "string"},
-                                title: {type: "string"}
-                            },
-                            condition: "type.eq.select"
-                        }
+                        condition: "type.eq.select"
                     }
-                },
-                success_message: { type: "string" },
-                button: { type: "string" }
-            }
-        },
-        contact_info: {
-            type: "repeater",
-            component: {
-                type: {
-                    type: "select",
-                    options: ["location", "phone", "mail"],
-                    default: "mail"
-                },
-                text: { type: "string" },
-                url: { type: "string" }
-            }
-        }   
-    } 
+                }
+            },
+            success_message: { type: "string" },
+            button: { type: "string" }
+        }
+    },
+    contact_info: {
+        type: "array",
+        items: {
+            type: {
+                type: "select",
+                options: ["location", "phone", "mail"],
+                default: "mail"
+            },
+            text: { type: "string" },
+            url: { type: "string" }
+        }
+    }   
 };
 
 export let Sections = [
     HeroSection, 
     GallerySection, 
     ResourcesSection, 
-    MediaContentSection, 
-    FeaturesSection, 
-    BenefitsSection, 
-    HowItWorksSection,
-    TestimonialsSection,
-    FAQSection,
-    CallToActionSection
+    // MediaContentSection, 
+    // FeaturesSection, 
+    // BenefitsSection, 
+    // HowItWorksSection,
+    // TestimonialsSection,
+    // FAQSection,
+    // CallToActionSection
 ];
