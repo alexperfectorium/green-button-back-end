@@ -12,6 +12,7 @@ export class SignUpUserDto {
     @Length(8, undefined, { message: 'Minimum password length - 8 symbols' })
     readonly password: string;
 
+    @IsOptional()
     @IsString({ message: 'Confirm password should be a string' })
     @Length(8, undefined, { message: 'Minimum confirm password length - 8 symbols' })
     readonly confirm_password: string;

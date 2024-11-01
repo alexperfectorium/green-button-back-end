@@ -1,4 +1,4 @@
-import { CanActivate, ExecutionContext, UnauthorizedException, Injectable } from "@nestjs/common";
+import { CanActivate, ExecutionContext, UnauthorizedException, Injectable, HttpException } from "@nestjs/common";
 import { Request } from "express";
 import { JwtService } from "@nestjs/jwt";
 import { CookieService } from "./cookie.service";
@@ -25,11 +25,8 @@ export class JwtAuthGuard implements CanActivate {
 
             req['session'] = sessionInfo;
         } catch (e) {
-            throw new UnauthorizedException({ 
-                statusCode: 501, 
-                message: 'server_error', 
-                dev_message: e 
-            });
+            throw new UnauthorizedException();
+            // throw new HttpException(e.status, e.message);
         }
 
         return true;
